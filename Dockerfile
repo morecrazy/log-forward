@@ -21,5 +21,6 @@ RUN chmod u+x /run.sh
 RUN chmod u+x /log-forward
 RUN mkdir -p /var/log/go_log
 
+
 # Commands when creating a new container
 CMD ["/run.sh"]
