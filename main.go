@@ -85,7 +85,7 @@ func main() {
 	} else {
 		addrs := []string{"http://etcd.in.codoon.com:2379"}
 		common.Config = new(common.Configure)
-		if err := common.LoadCfgFromEtcd(addrs, "log-sink", common.Config); err != nil {
+		if err := common.LoadCfgFromEtcd(addrs, "log-forward", common.Config); err != nil {
 			fmt.Println("init config from etcd err : ", err)
 		}
 	}
