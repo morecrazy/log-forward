@@ -35,7 +35,7 @@ func writeRedis(redisUrl , path, msg string) error {
 }
 
 func forwarder(logBuffer *LogBuffer) {
-	timer := time.NewTicker(10 * time.Second)
+	timer := time.NewTicker(1 * time.Second)
 	for {
 		select {
 		case <- logBuffer.ch:
