@@ -1,0 +1,17 @@
+{
+  "LogFile" : "log-forward",
+  "LogDir" : "./log",
+  "LogLevel": "DEBUG",
+  "External": {
+    "path": "/Users/zhanghan/go/src/zhanghan/demo/tt/",
+    "aa": "192.168.99.100:32768",
+    "other": "192.168.99.100:32768,32769",
+    "redisKey": "logstash-chan"
+  },
+  "ExternalInt64": {
+    "channelBufferSize": 2000,
+    "bufferWriterNum": 1,
+    "logSize": 1024,
+    "logBufferSize": 1000
+  }
+}
