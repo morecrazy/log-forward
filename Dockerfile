@@ -14,6 +14,7 @@ LABEL name="log-forward" author="zhanghan" branch="master"
 
 # add binary
 ADD log-forward /log-forward
+
 # add shell
 ADD run.sh /run.sh
 RUN chmod u+x /run.sh
