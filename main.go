@@ -91,7 +91,7 @@ func main() {
 	}
 
 	var err error
-	common.Logger, err = common.InitLogger("log-sink")
+	common.Logger, err = common.InitLogger("log-forward")
 	if err != nil {
 		fmt.Println("init log error")
 		return
