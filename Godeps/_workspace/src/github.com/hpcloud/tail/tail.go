@@ -367,12 +367,19 @@ func (tail *Tail) waitForChanges() error {
 		}
 	case <-tail.changes.Truncated:
 		// Always reopen truncated files (Follow is true)
+		/**
 		tail.Logger.Printf("Re-opening truncated file %s ...", tail.Filename)
 		if err := tail.reopen(); err != nil {
 			return err
 		}
 		tail.Logger.Printf("Successfully reopened truncated %s", tail.Filename)
 		tail.openReader()
+		**/
+		//此处是特殊处理,现阶段truncate file就只有在清文件时产生,所以没有必要重新开文件
+	    //如果同时打开文件太多,内存会崩.所以特殊处理方式是直接改变seek值,从最开始读取文件
+		if _, err := tail.file.Seek(0, 0); err != nil {
+			return err
+		}
 		return nil
 	case <-tail.Dying():
 		return ErrStop
