@@ -26,6 +26,7 @@ var gLogSize int64
 var gLogUnit string
 var gLogBufferSize int64
 var gFolderPath string
+var gLogCleanTimeInterval int64
 
 func init() {
 	const usage = "log-sink [-c config_file]"
@@ -40,6 +41,7 @@ func InitExternalConfig(config *common.Configure)  {
 	gChannelBufferSize = config.ExternalInt64["channelBufferSize"]
 	gBufferWriterNum = config.ExternalInt64["bufferWriterNum"]
 	gLogBufferSize = config.ExternalInt64["logBufferSize"]
+	gLogCleanTimeInterval = config.ExternalInt64["logCleanTimeInterval"]
 }
 
 func StripRedisUrl(redisPath string) []string {

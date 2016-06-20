@@ -12,6 +12,7 @@
     "channelBufferSize": 2000,
     "bufferWriterNum": 1,
     "logSize": 1024,
-    "logBufferSize": 1000
+    "logBufferSize": 1000,
+    "logCleanTimeInterval": 1
   }
 }
