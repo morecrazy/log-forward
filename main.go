@@ -107,7 +107,7 @@ func main() {
 		newTailer(item)
 	}
 
-	fmt.Println("Sink log service is started...")
+	fmt.Println("forward log service is started...")
 	timer := time.NewTicker(10 * time.Second)
 	for {
 		select {
