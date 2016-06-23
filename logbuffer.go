@@ -40,7 +40,7 @@ func (b *LogBuffer) ReadString() string {
 }
 
 func newLogBuffer(fileName , broker string) *LogBuffer {
-	common.Logger.Debug("Creating a new logbuffer")
+	common.Logger.Info("Creating a new logbuffer")
 	logBuffer := new(LogBuffer)
 	logBuffer.broker = broker
 	logBuffer.name = fileName

@@ -61,7 +61,7 @@ func StripRedisUrl(redisPath string) []string {
 }
 
 func checkNewFile(fileNameSet *set.Set) {
-	common.Logger.Debug("Starting check file folder")
+	common.Logger.Info("Starting check file folder")
 	fileNameList := GetFolderFileNames()
 	for i := 0; i < len(fileNameList); i++ {
 		filename := fileNameList[i]
