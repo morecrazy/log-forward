@@ -11,7 +11,8 @@ type LogBuffer struct {
 	len int64
 	linePrefix string
 	ch chan bool
-	broker string
+	brokeraddr string
+	topic string
 	name string
 }
 
@@ -32,17 +33,18 @@ func (b *LogBuffer) ReadString() string {
 	b.m.Lock()
 	defer b.m.Unlock()
 	str := b.buf.String()
-	common.Logger.Debug("start read string from logbuffer, the log name is %s, the broker is %s ,and the length is %d", b.name, b.broker, b.len)
+	common.Logger.Debug("start read string from logbuffer, the log name is %s, the broker is %s ,and the length is %d", b.name, b.brokeraddr, b.len)
 	b.buf.Reset()
 	b.len = 0
 	b.linePrefix = ""
 	return str
 }
 
-func newLogBuffer(fileName , broker string) *LogBuffer {
+func newLogBuffer(fileName , topic string, broker Broker, brokeraddr string) *LogBuffer {
 	common.Logger.Info("Creating a new logbuffer")
 	logBuffer := new(LogBuffer)
-	logBuffer.broker = broker
+	logBuffer.brokeraddr = brokeraddr
+	logBuffer.topic = topic
 	logBuffer.name = fileName
 	logBuffer.buf = new(bytes.Buffer)
 	logBuffer.m = new(sync.Mutex)
@@ -50,6 +52,6 @@ func newLogBuffer(fileName , broker string) *LogBuffer {
 	logBuffer.len = 0
 	logBuffer.linePrefix = ""
 	//每创建一个logbuffer,同事创建一个forwarder读取buffer数据
-	go forwarder(logBuffer)
+	go forwarder(logBuffer, broker)
 	return logBuffer
 }

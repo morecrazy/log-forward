@@ -6,27 +6,28 @@ import (
 	"flag"
 	"runtime"
 	"sync"
-	"strings"
 	"codoon_ops/log-forward/util/set"
 	"time"
 
 )
 
-var wg sync.WaitGroup
-
 const (
 	DEFAULT_CONF_FILE = "./log-sink.conf"
 )
 
-var g_conf_file string
-var gRedisKey string
-var gChannelBufferSize int64
-var gBufferWriterNum int64
-var gLogSize int64
-var gLogUnit string
-var gLogBufferSize int64
-var gFolderPath string
-var gLogCleanTimeInterval int64
+var (
+	wg sync.WaitGroup
+	g_conf_file string
+	gRedisKey string
+	gChannelBufferSize int64
+	gBufferWriterNum int64
+	gLogSize int64
+	gLogUnit string
+	gLogBufferSize int64
+	gFolderPath string
+	gBrokers string
+	gLogCleanTimeInterval int64
+)
 
 func init() {
 	const usage = "log-sink [-c config_file]"
@@ -37,6 +38,7 @@ func InitExternalConfig(config *common.Configure)  {
 	gFolderPath = config.External["path"]
 	gRedisKey = config.External["redisKey"]
 	gLogUnit = config.External["logUnit"]
+	gBrokers = config.External["brokers"]
 	gLogSize = config.ExternalInt64["logSize"]
 	gChannelBufferSize = config.ExternalInt64["channelBufferSize"]
 	gBufferWriterNum = config.ExternalInt64["bufferWriterNum"]
@@ -44,23 +46,7 @@ func InitExternalConfig(config *common.Configure)  {
 	gLogCleanTimeInterval = config.ExternalInt64["logCleanTimeInterval"]
 }
 
-func StripRedisUrl(redisPath string) []string {
-	redisUrlList := []string{}
-
-	redisList := strings.Split(redisPath, "|")
-	for i := 0; i < len(redisList); i++ {
-		redisPath := strings.Split(redisList[i], ":")
-		redisHost := redisPath[0]
-		redisPortList := strings.Split(redisPath[1], ",")
-		for j := 0; j < len(redisPortList); j++ {
-			redisUrl := redisHost + ":" + redisPortList[j]
-			redisUrlList = append(redisUrlList, redisUrl)
-		}
-	}
-	return redisUrlList
-}
-
-func checkNewFile(fileNameSet *set.Set) {
+func checkNewFile(fileNameSet *set.Set, broker Broker) {
 	common.Logger.Info("Starting check file folder")
 	fileNameList := GetFolderFileNames()
 	for i := 0; i < len(fileNameList); i++ {
@@ -69,7 +55,7 @@ func checkNewFile(fileNameSet *set.Set) {
 		if fileNameSet.Has(filename) {continue}
 		//否则,新开一个tailer,并且将此文件加入文件集合中
 		fileNameSet.Add(filename)
-		newTailer(filename)
+		newTailer(filename, broker)
 	}
 }
 
@@ -93,6 +79,8 @@ func main() {
 	}
 
 	var err error
+	broker := new(KafkaBroker) //注入broker
+
 	common.Logger, err = common.InitLogger("log-forward")
 	if err != nil {
 		fmt.Println("init log error")
@@ -104,7 +92,7 @@ func main() {
 	fileNameList := GetFolderFileNames()
 	for _, item := range fileNameList {
 		fileNameSet.Add(item)
-		newTailer(item)
+		newTailer(item, broker)
 	}
 
 	fmt.Println("forward log service is started...")
@@ -112,7 +100,7 @@ func main() {
 	for {
 		select {
 		case <-timer.C:
-			checkNewFile(fileNameSet)
+			checkNewFile(fileNameSet, broker)
 		}
 	}
 }
