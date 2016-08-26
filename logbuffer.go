@@ -4,12 +4,14 @@ import (
 	"bytes"
 	"sync"
 	"backend/common"
+	"os"
 )
 type LogBuffer struct {
 	m *sync.Mutex
 	buf *bytes.Buffer
 	len int64
 	linePrefix string
+	linePostfix string
 	ch chan bool
 	brokeraddr string
 	topic string
@@ -24,7 +26,7 @@ func (b *LogBuffer) WriteString(s string) (n int, err error) {
 	if b.len == gLogBufferSize {
 		b.ch <- true
 	}
-	line := b.linePrefix + s
+	line := b.linePrefix + s + b.linePostfix
 	b.linePrefix = "\n"
 	return b.buf.WriteString(line)
 }
@@ -51,6 +53,8 @@ func newLogBuffer(fileName , topic string, broker Broker, brokeraddr string) *Lo
 	logBuffer.ch = make(chan bool, 1)
 	logBuffer.len = 0
 	logBuffer.linePrefix = ""
+	linePostfix, _ := os.Hostname()
+	logBuffer.linePostfix = " [hostname:" + linePostfix + "]"
 	//每创建一个logbuffer,同事创建一个forwarder读取buffer数据
 	go forwarder(logBuffer, broker)
 	return logBuffer
