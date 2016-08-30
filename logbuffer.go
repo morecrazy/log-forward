@@ -5,6 +5,7 @@ import (
 	"sync"
 	"backend/common"
 	"os"
+	"strings"
 )
 type LogBuffer struct {
 	m *sync.Mutex
@@ -26,7 +27,11 @@ func (b *LogBuffer) WriteString(s string) (n int, err error) {
 	if b.len == gLogBufferSize {
 		b.ch <- true
 	}
-	line := b.linePrefix + s + b.linePostfix
+	str := []string{}
+	str = append(str, b.linePrefix)
+	str = append(str, s)
+	str = append(str, b.linePostfix)
+	line := strings.Join(str, "")
 	b.linePrefix = "\n"
 	return b.buf.WriteString(line)
 }

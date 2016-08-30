@@ -15,7 +15,7 @@ func forwarder(logBuffer *LogBuffer, broker Broker) {
 	for {
 		select {
 		case <- logBuffer.ch:
-			//从buf读取数据,写入到redis
+			//从buf读取数据,写入到broker
 			msg := logBuffer.ReadString()
 		 	if msg == "" {continue}
 			if err := broker.ProduceMsg(logBuffer.brokeraddr, logBuffer.topic, logBuffer.name, msg); err != nil {
@@ -23,7 +23,7 @@ func forwarder(logBuffer *LogBuffer, broker Broker) {
 			}
 		case <-timer.C:
 			//超时时间到,强制读取数据
-			//从buf读取数据,写入到redis
+			//从buf读取数据,写入到broker
 			msg := logBuffer.ReadString()
 			if msg == "" {continue}
  			if err := broker.ProduceMsg(logBuffer.brokeraddr, logBuffer.topic, logBuffer.name, msg); err != nil {

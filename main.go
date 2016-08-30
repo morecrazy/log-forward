@@ -19,14 +19,12 @@ var (
 	wg sync.WaitGroup
 	g_conf_file string
 	gRedisKey string
-	gChannelBufferSize int64
-	gBufferWriterNum int64
+
 	gLogSize int64
 	gLogUnit string
 	gLogBufferSize int64
 	gFolderPath string
 	gBrokers string
-	gLogCleanTimeInterval int64
 )
 
 func init() {
@@ -40,10 +38,8 @@ func InitExternalConfig(config *common.Configure)  {
 	gLogUnit = config.External["logUnit"]
 	gBrokers = config.External["brokers"]
 	gLogSize = config.ExternalInt64["logSize"]
-	gChannelBufferSize = config.ExternalInt64["channelBufferSize"]
-	gBufferWriterNum = config.ExternalInt64["bufferWriterNum"]
+
 	gLogBufferSize = config.ExternalInt64["logBufferSize"]
-	gLogCleanTimeInterval = config.ExternalInt64["logCleanTimeInterval"]
 }
 
 func checkNewFile(fileNameSet *set.Set, broker Broker) {
