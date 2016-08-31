@@ -107,7 +107,7 @@ func TailFile(filename string, config Config) (*Tail, error) {
 
 	t := &Tail{
 		Filename: filename,
-		Lines:    make(chan *Line),
+		Lines:    make(chan *Line, 2),
 		Config:   config,
 	}
 
