@@ -265,6 +265,9 @@ func (tail *Tail) tailFileSync() {
 			// grab the position in case we need to back up in the event of a half-line
 			offset, err = tail.Tell()
 			if err != nil {
+				if tail.Filename == "/var/log/go_log/ucenter.log" {
+					fmt.Println("come here e")
+				}
 				tail.Kill(err)
 				return
 			}
@@ -337,6 +340,9 @@ func (tail *Tail) tailFileSync() {
 
 		select {
 		case <-tail.Dying():
+			if tail.Filename == "/var/log/go_log/ucenter.log" {
+				fmt.Println("come here f")
+			}
 			if tail.Err() == errStopAtEOF {
 				continue
 			}
