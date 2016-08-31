@@ -32,19 +32,15 @@ func tailer(fileName, topic string, broker Broker, brokerList []string) {
 	seek := &tail.SeekInfo{Offset:0, Whence:2}
 	t, _ := tail.TailFile(fileName, tail.Config{Location: seek, Poll:true, Follow: true})
 
-
-	for {
-		select {
-		case line := <- t.Lines:
-			index := rand.Intn(100) % mod
-			if fileName == "/var/log/go_log/ucenter.log" {
-				common.Logger.Info("Read from file %s", line.Text)
-			}
-			//随机获取一个broker buffer进行写入操作
-			logBuffer := logBufferList[index]
-			if _, err := logBuffer.WriteString(line.Text); err != nil {
-				common.Logger.Error(err.Error())
-			}
+	for line := range t.Lines {
+		index := rand.Intn(100) % mod
+		if fileName == "/var/log/go_log/ucenter.log" {
+			common.Logger.Info("Read from file %s", line.Text)
+		}
+		//随机获取一个broker buffer进行写入操作
+		logBuffer := logBufferList[index]
+		if _, err := logBuffer.WriteString(line.Text); err != nil {
+			common.Logger.Error(err.Error())
 		}
 	}
 }
