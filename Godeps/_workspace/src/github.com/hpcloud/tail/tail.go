@@ -208,6 +208,9 @@ func (tail *Tail) reopen() error {
 }
 
 func (tail *Tail) readLine() (string, error) {
+	if tail.Filename == "/var/log/go_log/ucenter.log" {
+		fmt.Println("Starting Read line from file %s", tail.Filename)
+	}
 	tail.lk.Lock()
 	line, err := tail.reader.ReadString('\n')
 	tail.lk.Unlock()
@@ -220,7 +223,7 @@ func (tail *Tail) readLine() (string, error) {
 
 	line = strings.TrimRight(line, "\n")
 	if tail.Filename == "/var/log/go_log/ucenter.log" {
-		fmt.Println("Read line from file %s", tail.Filename)
+		fmt.Println("Haven Read line from file %s", tail.Filename)
 	}
 	return line, err
 }
