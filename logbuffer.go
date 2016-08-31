@@ -40,9 +40,7 @@ func (b *LogBuffer) ReadString() string {
 	b.m.Lock()
 	defer b.m.Unlock()
 	str := b.buf.String()
-	if b.name == "/var/log/go_log/ucenter.log" {
-		common.Logger.Info("start read string from logbuffer, the log name is %s, the broker is %s ,and the length is %d", b.name, b.brokeraddr, b.len)
-	}
+	common.Logger.Debug("start read string from logbuffer, the log name is %s, the broker is %s ,and the length is %d", b.name, b.brokeraddr, b.len)
 	b.buf.Reset()
 	b.len = 0
 	b.linePrefix = ""

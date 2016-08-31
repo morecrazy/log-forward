@@ -256,15 +256,9 @@ func (tail *Tail) tailFileSync() {
 	for {
 		// do not seek in named pipes
 		if !tail.Pipe {
-			if tail.Filename == "/var/log/go_log/ucenter.log" {
-				fmt.Println("come here a")
-			}
 			// grab the position in case we need to back up in the event of a half-line
 			offset, err = tail.Tell()
 			if err != nil {
-				if tail.Filename == "/var/log/go_log/ucenter.log" {
-					fmt.Println("come here e")
-				}
 				tail.Kill(err)
 				return
 			}
@@ -276,9 +270,6 @@ func (tail *Tail) tailFileSync() {
 		if err == nil {
 			cooloff := !tail.sendLine(line)
 			if cooloff {
-				if tail.Filename == "/var/log/go_log/ucenter.log" {
-					fmt.Println("come here b")
-				}
 				// Wait a second before seeking till the end of
 				// file when rate limit is reached.
 				msg := fmt.Sprintf(
@@ -296,15 +287,9 @@ func (tail *Tail) tailFileSync() {
 				}
 			}
 		} else if err == io.EOF {
-			if tail.Filename == "/var/log/go_log/ucenter.log" {
-				fmt.Println("come here c")
-			}
 			if !tail.Follow {
 				if line != "" {
 					tail.sendLine(line)
-				}
-				if tail.Filename == "/var/log/go_log/ucenter.log" {
-					fmt.Println("come here g")
 				}
 				return
 			}
@@ -315,9 +300,6 @@ func (tail *Tail) tailFileSync() {
 				err := tail.seekTo(SeekInfo{Offset: offset, Whence: 0})
 				if err != nil {
 					tail.Kill(err)
-					if tail.Filename == "/var/log/go_log/ucenter.log" {
-						fmt.Println("come here i")
-					}
 					return
 				}
 			}
@@ -330,15 +312,9 @@ func (tail *Tail) tailFileSync() {
 				if err != ErrStop {
 					tail.Kill(err)
 				}
-				if tail.Filename == "/var/log/go_log/ucenter.log" {
-					fmt.Println("come here h")
-				}
 				return
 			}
 		} else {
-			if tail.Filename == "/var/log/go_log/ucenter.log" {
-				fmt.Println("come here d")
-			}
 			// non-EOF error
 			tail.Killf("Error reading %s: %s", tail.Filename, err)
 			return
@@ -346,18 +322,12 @@ func (tail *Tail) tailFileSync() {
 
 		select {
 		case <-tail.Dying():
-			if tail.Filename == "/var/log/go_log/ucenter.log" {
-				fmt.Println("come here f")
-			}
 			if tail.Err() == errStopAtEOF {
 				continue
 			}
 			return
 		default:
 		}
-	}
-	if tail.Filename == "/var/log/go_log/ucenter.log" {
-		fmt.Println("come to end")
 	}
 }
 
