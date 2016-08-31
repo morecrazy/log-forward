@@ -220,7 +220,7 @@ func (tail *Tail) readLine() (string, error) {
 
 	line = strings.TrimRight(line, "\n")
 	if tail.Filename == "/var/log/go_log/ucenter.log" {
-		fmt.Printf("Read line from file %s\n", tail.Filename)
+		fmt.Println("Read line from file %s", tail.Filename)
 	}
 	return line, err
 }
@@ -259,11 +259,12 @@ func (tail *Tail) tailFileSync() {
 	for {
 		// do not seek in named pipes
 		if !tail.Pipe {
-			fmt.Println("come here a")
+			if tail.Filename == "/var/log/go_log/ucenter.log" {
+				fmt.Println("come here a")
+			}
 			// grab the position in case we need to back up in the event of a half-line
 			offset, err = tail.Tell()
 			if err != nil {
-				fmt.Println("come here b")
 				tail.Kill(err)
 				return
 			}
@@ -275,7 +276,9 @@ func (tail *Tail) tailFileSync() {
 		if err == nil {
 			cooloff := !tail.sendLine(line)
 			if cooloff {
-				fmt.Println("come here c")
+				if tail.Filename == "/var/log/go_log/ucenter.log" {
+					fmt.Println("come here b")
+				}
 				// Wait a second before seeking till the end of
 				// file when rate limit is reached.
 				msg := fmt.Sprintf(
@@ -293,7 +296,9 @@ func (tail *Tail) tailFileSync() {
 				}
 			}
 		} else if err == io.EOF {
-			fmt.Println("come here d")
+			if tail.Filename == "/var/log/go_log/ucenter.log" {
+				fmt.Println("come here c")
+			}
 			if !tail.Follow {
 				if line != "" {
 					tail.sendLine(line)
@@ -322,7 +327,9 @@ func (tail *Tail) tailFileSync() {
 				return
 			}
 		} else {
-			fmt.Println("come here e")
+			if tail.Filename == "/var/log/go_log/ucenter.log" {
+				fmt.Println("come here d")
+			}
 			// non-EOF error
 			tail.Killf("Error reading %s: %s", tail.Filename, err)
 			return
@@ -422,7 +429,7 @@ func (tail *Tail) seekTo(pos SeekInfo) error {
 // if necessary. Return false if rate limit is reached.
 func (tail *Tail) sendLine(line string) bool {
 	if tail.Filename == "/var/log/go_log/ucenter.log" {
-		fmt.Printf("Send line from file %s\n", tail.Filename)
+		fmt.Println("Send line from file %s", tail.Filename)
 	}
 	now := time.Now()
 	lines := []string{line}
