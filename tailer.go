@@ -30,7 +30,7 @@ func tailer(fileName, topic string, broker Broker, brokerList []string) {
 	}
 	//whence为0表示相对于文件的开始处，1表示相对于当前的位置，2表示相对于文件结尾
 	seek := &tail.SeekInfo{Offset:0, Whence:2}
-	t, _ := tail.TailFile(fileName, tail.Config{Location: seek, Follow: true})
+	t, _ := tail.TailFile(fileName, tail.Config{Location: seek, Poll:true, Follow: true})
 
 
 	for {
