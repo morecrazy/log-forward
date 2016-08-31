@@ -219,7 +219,9 @@ func (tail *Tail) readLine() (string, error) {
 	}
 
 	line = strings.TrimRight(line, "\n")
-
+	if tail.Filename == "/var/log/go_log/ucenter.log" {
+		fmt.Printf("Read line from file %s", tail.Filename)
+	}
 	return line, err
 }
 
@@ -414,6 +416,9 @@ func (tail *Tail) seekTo(pos SeekInfo) error {
 // sendLine sends the line(s) to Lines channel, splitting longer lines
 // if necessary. Return false if rate limit is reached.
 func (tail *Tail) sendLine(line string) bool {
+	if tail.Filename == "/var/log/go_log/ucenter.log" {
+		fmt.Printf("Send line from file %s", tail.Filename)
+	}
 	now := time.Now()
 	lines := []string{line}
 
