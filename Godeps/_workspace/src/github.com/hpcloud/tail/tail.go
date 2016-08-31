@@ -378,6 +378,7 @@ func (tail *Tail) waitForChanges() error {
 
 	select {
 	case <-tail.changes.Modified:
+		fmt.Println("Recieve modify changes")
 		return nil
 	case <-tail.changes.Deleted:
 		tail.changes = nil
