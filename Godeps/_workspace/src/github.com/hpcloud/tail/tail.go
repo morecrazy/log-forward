@@ -208,9 +208,6 @@ func (tail *Tail) reopen() error {
 }
 
 func (tail *Tail) readLine() (string, error) {
-	if tail.Filename == "/var/log/go_log/ucenter.log" {
-		fmt.Println("Starting Read line from file %s", tail.Filename)
-	}
 	tail.lk.Lock()
 	line, err := tail.reader.ReadString('\n')
 	tail.lk.Unlock()
@@ -222,9 +219,6 @@ func (tail *Tail) readLine() (string, error) {
 	}
 
 	line = strings.TrimRight(line, "\n")
-	if tail.Filename == "/var/log/go_log/ucenter.log" {
-		fmt.Println("Haven Read line from file %s", tail.Filename)
-	}
 	return line, err
 }
 
@@ -384,9 +378,6 @@ func (tail *Tail) waitForChanges() error {
 
 	select {
 	case <-tail.changes.Modified:
-		if tail.Filename == "/var/log/go_log/ucenter.log" {
-			fmt.Println("Recieve modify changes")
-		}
 		return nil
 	case <-tail.changes.Deleted:
 		tail.changes = nil
@@ -453,7 +444,7 @@ func (tail *Tail) seekTo(pos SeekInfo) error {
 // if necessary. Return false if rate limit is reached.
 func (tail *Tail) sendLine(line string) bool {
 	if tail.Filename == "/var/log/go_log/ucenter.log" {
-		fmt.Println("Send line from file %s", tail.Filename)
+		fmt.Println("Start Sending line from file %s", tail.Filename)
 	}
 	now := time.Now()
 	lines := []string{line}
@@ -475,7 +466,9 @@ func (tail *Tail) sendLine(line string) bool {
 			return false
 		}
 	}
-
+	if tail.Filename == "/var/log/go_log/ucenter.log" {
+		fmt.Println("Finish Sending line from file %s", tail.Filename)
+	}
 	return true
 }
 

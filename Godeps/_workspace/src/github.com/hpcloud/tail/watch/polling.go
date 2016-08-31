@@ -7,7 +7,6 @@ import (
 	"os"
 	"runtime"
 	"time"
-	"fmt"
 
 	"github.com/hpcloud/tail/util"
 	"gopkg.in/tomb.v1"
@@ -59,9 +58,6 @@ func (fw *PollingFileWatcher) ChangeEvents(t *tomb.Tomb, pos int64) (*FileChange
 
 	go func() {
 		prevSize := fw.Size
-		if fw.Filename == "/var/log/go_log/ucenter.log" {
-			fmt.Printf("Pre file size is %s\n", prevSize)
-		}
 		for {
 			select {
 			case <-t.Dying():
@@ -84,10 +80,6 @@ func (fw *PollingFileWatcher) ChangeEvents(t *tomb.Tomb, pos int64) (*FileChange
 				util.Fatal("Failed to stat file %v: %v", fw.Filename, err)
 			}
 
-			if fw.Filename == "/var/log/go_log/ucenter.log" {
-				fmt.Printf("Current file size is %s\n", fw.Size)
-			}
-
 			// File got moved/renamed?
 			if !os.SameFile(origFi, fi) {
 				changes.NotifyDeleted()
@@ -104,9 +96,6 @@ func (fw *PollingFileWatcher) ChangeEvents(t *tomb.Tomb, pos int64) (*FileChange
 			// File got bigger?
 			if prevSize > 0 && prevSize < fw.Size {
 				changes.NotifyModified()
-				if fw.Filename == "/var/log/go_log/ucenter.log" {
-					fmt.Println("File become bigger")
-				}
 				prevSize = fw.Size
 				continue
 			}

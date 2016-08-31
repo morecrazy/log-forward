@@ -35,7 +35,7 @@ func tailer(fileName, topic string, broker Broker, brokerList []string) {
 	for line := range t.Lines {
 		index := rand.Intn(100) % mod
 		if fileName == "/var/log/go_log/ucenter.log" {
-			common.Logger.Info("Read from file %s", line.Text)
+			common.Logger.Info("Read channel line from file %s", fileName)
 		}
 		//随机获取一个broker buffer进行写入操作
 		logBuffer := logBufferList[index]
