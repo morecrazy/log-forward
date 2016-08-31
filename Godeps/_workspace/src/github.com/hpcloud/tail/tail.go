@@ -306,6 +306,9 @@ func (tail *Tail) tailFileSync() {
 				if line != "" {
 					tail.sendLine(line)
 				}
+				if tail.Filename == "/var/log/go_log/ucenter.log" {
+					fmt.Println("come here g")
+				}
 				return
 			}
 
@@ -315,6 +318,9 @@ func (tail *Tail) tailFileSync() {
 				err := tail.seekTo(SeekInfo{Offset: offset, Whence: 0})
 				if err != nil {
 					tail.Kill(err)
+					if tail.Filename == "/var/log/go_log/ucenter.log" {
+						fmt.Println("come here i")
+					}
 					return
 				}
 			}
@@ -326,6 +332,9 @@ func (tail *Tail) tailFileSync() {
 			if err != nil {
 				if err != ErrStop {
 					tail.Kill(err)
+				}
+				if tail.Filename == "/var/log/go_log/ucenter.log" {
+					fmt.Println("come here h")
 				}
 				return
 			}
