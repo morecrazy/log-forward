@@ -48,7 +48,7 @@ func (kafkaBroker *KafkaBroker) ProduceMsg(broker, topic, name, msg string) erro
 	if err != nil {
 		common.Logger.Error(err.Error())
 	}
-	common.Logger.Debug("Message is stored in topic(%s)/partition(%d)/offset(%d)\n", topic, partition, offset)
+	common.Logger.Info("The Message of Log file (%s) is stored in topic(%s)/partition(%d)/offset(%d)\n", name, topic, partition, offset)
 	return nil
 }
 
