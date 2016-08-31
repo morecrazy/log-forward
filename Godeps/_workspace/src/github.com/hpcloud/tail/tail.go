@@ -107,7 +107,7 @@ func TailFile(filename string, config Config) (*Tail, error) {
 
 	t := &Tail{
 		Filename: filename,
-		Lines:    make(chan *Line, 2),
+		Lines:    make(chan *Line, 10),
 		Config:   config,
 	}
 
@@ -413,9 +413,6 @@ func (tail *Tail) seekTo(pos SeekInfo) error {
 // sendLine sends the line(s) to Lines channel, splitting longer lines
 // if necessary. Return false if rate limit is reached.
 func (tail *Tail) sendLine(line string) bool {
-	if tail.Filename == "/var/log/go_log/ucenter.log" {
-		fmt.Println("Start Sending line from file %s", tail.Filename)
-	}
 	now := time.Now()
 	lines := []string{line}
 
@@ -435,9 +432,6 @@ func (tail *Tail) sendLine(line string) bool {
 				tail.Filename)
 			return false
 		}
-	}
-	if tail.Filename == "/var/log/go_log/ucenter.log" {
-		fmt.Println("Finish Sending line from file %s", tail.Filename)
 	}
 	return true
 }
