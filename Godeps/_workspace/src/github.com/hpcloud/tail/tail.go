@@ -362,6 +362,9 @@ func (tail *Tail) tailFileSync() {
 		default:
 		}
 	}
+	if tail.Filename == "/var/log/go_log/ucenter.log" {
+		fmt.Println("come to end")
+	}
 }
 
 // waitForChanges waits until the file has been appended, deleted,
