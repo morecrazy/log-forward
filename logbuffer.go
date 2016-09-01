@@ -21,9 +21,9 @@ type LogBuffer struct {
 
 func (b *LogBuffer) WriteString(s string) (n int, err error) {
 	b.m.Lock()
-	defer b.m.Unlock()
 	//common.Logger.Debug("start write string to logbuffer, the log buffer name is %s, and the length is %d", b.broker, b.len)
 	b.len ++
+	b.m.Unlock()
 	if b.len == gLogBufferSize {
 		b.ch <- true
 	}
@@ -37,13 +37,13 @@ func (b *LogBuffer) WriteString(s string) (n int, err error) {
 }
 
 func (b *LogBuffer) ReadString() string {
-	b.m.Lock()
-	defer b.m.Unlock()
 	str := b.buf.String()
-	common.Logger.Debug("start read string from logbuffer, the log name is %s, the broker is %s ,and the length is %d", b.name, b.brokeraddr, b.len)
+	//common.Logger.Debug("start read string from logbuffer, the log name is %s, the broker is %s ,and the length is %d", b.name, b.brokeraddr, b.len)
 	b.buf.Reset()
+	b.m.Lock()
 	b.len = 0
 	b.linePrefix = ""
+	b.m.Unlock()
 	return str
 }
 
